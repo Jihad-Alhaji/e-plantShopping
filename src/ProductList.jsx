@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import './ProductList.css'
 import CartItem from './CartItem';
+import { addItem } from './CartSlice';
+import { useSelector , useDispatch } from 'react-redux';
 
-function ProductCard ({ProductData})
+function ProductCard ({ProductData , handleAddToCart})
 {
-    const handleAddToCart = ()=>{};
     return <div className='product-card'>
         <img className='product-image' src={ProductData.image} alt={ProductData.name}></img>
         <div className='product-title'>{ProductData.name}</div>
         <div className='product-description'>{ProductData.description}</div>
         <div className='product-price'>{ProductData.cost}</div>
-        <button className='product-button' onClick={handleAddToCart}>Add To Cart</button>
+        <button className='product-button' onClick={()=>{handleAddToCart(ProductData)}}>Add To Cart</button>
     </div>
 }
 
-function ProductCategorySection({CatData})
+function ProductCategorySection({CatData, handleAddToCart})
 {
     return <>
         <h1>{CatData.category}</h1>
         <div className='product-list'>
             {
                 CatData.plants.map((item,index)=>{
-                    return <ProductCard ProductData={item} key={index}></ProductCard>
+                    return <ProductCard ProductData={item} key={index} handleAddToCart={handleAddToCart}></ProductCard>
                 })
             }
         </div>
@@ -30,6 +31,9 @@ function ProductCategorySection({CatData})
 function ProductList({ onHomeClick }) {
     const [showCart, setShowCart] = useState(false);
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
+    const [addedToCart, setAddedToCart] = useState({}); // products that where added to cart, 
+    
+    const dispatch = useDispatch();
 
     const plantsArray = [
         {
@@ -278,6 +282,11 @@ function ProductList({ onHomeClick }) {
         e.preventDefault();
         setShowCart(false);
     };
+
+    const handleAddToCart = (p)=>{
+        dispatch(addItem(p))
+        setAddedToCart((prevState)=>{ return { ...prevState, [p.name]:true }; });
+    }
     return (
         <div>
             <div className="navbar" style={styleObj}>
@@ -302,7 +311,7 @@ function ProductList({ onHomeClick }) {
                 <div className="product-grid">
                     {
                         plantsArray.map((item,index)=>{
-                            return <ProductCategorySection key={index} CatData={item}/>
+                            return <ProductCategorySection key={index} CatData={item} handleAddToCart={handleAddToCart}/>
                         })
                     }
 
