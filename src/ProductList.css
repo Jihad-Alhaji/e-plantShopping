@@ -39,6 +39,17 @@ body {
    
 }
 
+.cart svg {
+  display: block;
+}
+.cart span {
+  transform: translate(200% , 30%);
+  color: white; /* adjust as needed */
+  font-size: 20px;
+  font-weight: bold;
+  pointer-events: none;
+}
+
 /* Product Grid */
 .product-grid {
     display:flex;
@@ -106,7 +117,13 @@ body {
     transition: background-color 0.3s ease-in-out;
     margin-top: 10px;
 }
-
+.product-button:disabled{
+    background-color: #393534;
+}
+.product-button:disabled:hover
+{
+     background-color: #393534;
+}
 .product-button:hover {
     background-color: #c0392b;
 }
